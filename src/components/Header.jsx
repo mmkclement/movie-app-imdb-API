@@ -1,8 +1,23 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Splide, SplideSlide } from "@splidejs/react-splide";
 import "@splidejs/react-splide/css";
+import HeaderCard from "./HeaderCard";
 
 const Header = () => {
+  const [relatedMovies, setRelatedMovies] = useState([]);
+
+  useEffect(() => {
+    getRelatedMovies();
+  }, []);
+
+  const getRelatedMovies = async () => {
+    const response = await fetch(
+      "https://api.themoviedb.org/3/movie/top_rated?api_key=3712c8421da7c846d6f35e5fc5c75c2d&language=en-US"
+    );
+    const data = await response.json();
+    setRelatedMovies(data.results);
+  };
+
   return (
     <section className="h-screen w-full">
       <Splide
@@ -13,50 +28,14 @@ const Header = () => {
           interval: 2000,
         }}
       >
-        <SplideSlide>
-          <div className="w-full h-screen relative">
-            <img
-              src="https://th.bing.com/th/id/R.eb879f435bcf587d7bc1957df1374164?rik=5VIIMOdMRWOS6Q&pid=ImgRaw&r=0"
-              alt=""
-              className="w-full h-full object-cover"
-            />
-            <div className="dark-ov"></div>
-            <div className="text-box">
-              <h1 className="text-5xl font-extra-bold">World is with you</h1>
-              <p className="text-lg font-medium">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis
-                laborum molestias eveniet porro.Lorem ipsum dolor sit amet
-                consectetur adipisicing elit. Nobis laborum molestias eveniet
-                porro.
-              </p>
-              <button className="bg-white text-black px-3 py-2 rounded-md font-medium text-lg mt-1">
-                Watch Now
-              </button>
-            </div>
-          </div>
-        </SplideSlide>
-        <SplideSlide>
-          <div className="w-full h-screeen relative">
-            <img
-              src="https://th.bing.com/th/id/OIP.TevMNp6ERazATLzjaUekLQHaFG?pid=ImgDet&rs=1"
-              alt=""
-              className="w-full h-full object-cover"
-            />
-            <div className="dark-ov"></div>
-            <div className="text-box">
-              <h1 className="text-5xl font-extra-bold">World is with you</h1>
-              <p className="text-lg font-medium">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis
-                laborum molestias eveniet porro.Lorem ipsum dolor sit amet
-                consectetur adipisicing elit. Nobis laborum molestias eveniet
-                porro.
-              </p>
-              <button className="bg-white text-black px-3 py-2 rounded-md font-medium text-lg mt-1">
-                Watch Now
-              </button>
-            </div>
-          </div>
-        </SplideSlide>
+        {/* Loop through each movie and create a SplideSlide */}
+        {relatedMovies.map((movie) => (
+          <SplideSlide key={movie.id}>
+            {/* Pass image URL and title from movie data */}
+
+            <HeaderCard movie={movie} imgSrc={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} title={movie.title} />
+          </SplideSlide>
+        ))}
       </Splide>
     </section>
   );

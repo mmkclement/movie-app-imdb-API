@@ -38,7 +38,7 @@ const Header = () => {
         ))}
       </Splide>
     </section>
-  );
+  );  
 };
 
 export default Header;
